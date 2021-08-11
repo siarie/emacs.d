@@ -1,0 +1,22 @@
+# Compiled
+*.elc
+
+# Packaging
+.cask
+
+# Backup files
+*~
+auto-save-list
+
+# Undo-tree save-files
+*.~undo-tree
+
+# el-get
+el-get
+
+# Projectile
+projectile-bookmarks.eld
+
+# etc
+ac-comphist.dat
+transient
