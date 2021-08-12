@@ -1,0 +1,37 @@
+#+title: ~/.emacs.d
+
+My emacs configuration using el-get package manager.
+
+#+begin_quote
+*Note:*
+
+This config requires emacs v26.0 or higher
+#+end_quote
+
+* Supported language
+
+- PHP (php-mode)
+- Python (default, with some improvement)
+- HTML / CSS / SCSS / Javascript (default)
+- etc.
+
+* Instalations
+** Requirement
+This config using el-get as package management. 
+Which requires some packages installed on the system.
+[[https://github.com/dimitri/el-get#installation-dependencies][see el-get installation dependencies]]
+
+** Install
+
+#+begin_src sh
+$ git clone https://github.com/siarie/emacs.d.git ~/.emacs.d
+$ emacs # open emacs
+$ # wait until all package installed successfully
+$ # it may take a long time
+#+end_src
+
+* Licence
+
+Released under the [[https://www.gnu.org/licenses/gpl-3.0.en.html][GPL v3]] 
+unless otherwise specified by license files in subfolders.
+
