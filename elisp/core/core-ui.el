@@ -6,6 +6,9 @@
                     :height 100
 		    :weight 'normal)
 
+(set-face-attribute 'font-lock-comment-face nil
+		    :slant 'italic)
+
 (set-face-attribute 'font-lock-keyword-face nil
 		    :weight 'bold)
 
