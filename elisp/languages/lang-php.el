@@ -13,8 +13,8 @@
 	  (lambda ()
 	    (setq indent-tabs-mode nil
 		  fill-column 78)
-	    (with-eval-after-load 'company
-	      (add-to-list 'company-backends 'company-ac-php-backend))))
+	    (setq-local company-backends
+			'((company-ac-php-backend :with company-yasnippet)))))
 
 (provide 'lang-php)
 
