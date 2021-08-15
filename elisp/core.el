@@ -5,6 +5,7 @@
  (expand-file-name "core" (file-name-directory load-file-name)))
 
 (require 'core-bindings)
+(require 'core-editor)
 (require 'core-ui)
  
 (provide 'core)

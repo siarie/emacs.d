@@ -12,8 +12,16 @@
 (set-face-attribute 'font-lock-keyword-face nil
 		    :weight 'bold)
 
+;; disable fancy ui
+(menu-bar-mode 0)
+(tool-bar-mode 0)
+(scroll-bar-mode 0)
+
 ;; highlight current line
 (global-hl-line-mode 1)
+
+;; theme
+
 
 (provide 'core-ui)
 
