@@ -19,6 +19,9 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
+(add-to-list
+ 'el-get-recipe-path (expand-file-name "recipes" user-emacs-directory))
+
 (add-to-list 'load-path (expand-file-name "elisp" user-emacs-directory))
 (require 'core)
 (require 'extensions)
