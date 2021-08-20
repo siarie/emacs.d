@@ -13,6 +13,7 @@ This config requires emacs v26.0 or higher
 - PHP (php-mode)
 - Python (default, with some improvement)
 - HTML / CSS / SCSS / Javascript (default)
+- Go
 - etc.
 
 * Instalations
