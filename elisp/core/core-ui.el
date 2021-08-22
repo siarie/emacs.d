@@ -2,6 +2,8 @@
 
 ;;; Commentary:
 
+(load-theme 'wombat)
+
 (set-face-attribute 'default nil
                     :height 100
 		    :weight 'normal)
