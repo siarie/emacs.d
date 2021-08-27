@@ -12,13 +12,13 @@ This config requires emacs v26.0 or higher
 
 - PHP (php-mode)
 - Python (default, with some improvement)
-- HTML / CSS / SCSS / Javascript (default)
+- HTML / CSS / SCSS / Javascript (with web-mode)
 - Go
 - etc.
 
 * Instalations
 ** Requirement
-This config using el-get as package management. 
+This config using el-get as package management.
 Which requires some packages installed on the system.
 [[https://github.com/dimitri/el-get#installation-dependencies][see el-get installation dependencies]]
 
@@ -33,6 +33,5 @@ $ # it may take a long time
 
 * Licence
 
-Released under the [[https://www.gnu.org/licenses/gpl-3.0.en.html][GPL v3]] 
+Released under the [[https://www.gnu.org/licenses/gpl-3.0.en.html][GPL v3]]
 unless otherwise specified by license files in subfolders.
-
