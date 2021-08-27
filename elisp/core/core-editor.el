@@ -16,13 +16,19 @@
 ;; global line numbers
 (global-display-line-numbers-mode 1)
 
+;; delete trailing whitespace before save
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 ;; final newline
 (setq require-final-newline t)
 (setq next-line-add-newlines nil)
 
 ;; use space instead of tab
 (setq-default indent-tabs-mode nil)
-(setq-default tab-width 8)
+(setq-default tab-width 4)
+
+(defvaralias 'c-basic-offset 'tab-width)
+(defvaralias 'cperl-indent-level 'tab-width)
 
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
