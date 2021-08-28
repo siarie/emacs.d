@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: def ...(): ...
+# key: def
+# --
+
+def ${function}(${params}):
+    return $0
+
