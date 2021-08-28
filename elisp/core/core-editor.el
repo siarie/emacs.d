@@ -36,6 +36,11 @@
 ;; ask y or n instead yes or no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+;; auto fill column
+(auto-fill-mode 1)
+(setq fill-column 72)
+(setq comment-auto-fill-only-comments t)
+
 (provide 'core-editor)
 
 ;;; core-editor.el ends here
