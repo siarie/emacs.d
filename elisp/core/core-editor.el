@@ -13,8 +13,9 @@
 ;; show matching paren
 (show-paren-mode 1)
 
-;; global line numbers
+;; line & column numbers
 (global-display-line-numbers-mode 1)
+(column-number-mode 1)
 
 ;; delete trailing whitespace before save
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -30,7 +31,8 @@
 (defvaralias 'c-basic-offset 'tab-width)
 (defvaralias 'cperl-indent-level 'tab-width)
 
-;; revert buffers automatically when underlying files are changed externally
+;; revert buffers automatically when underlying files are changed
+;; externally
 (global-auto-revert-mode t)
 
 ;; ask y or n instead yes or no
@@ -38,6 +40,7 @@
 
 ;; auto fill column
 (auto-fill-mode 1)
+(global-display-fill-column-indicator-mode)
 (setq fill-column 72)
 (setq comment-auto-fill-only-comments t)
 
