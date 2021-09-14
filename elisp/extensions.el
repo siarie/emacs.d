@@ -6,12 +6,13 @@
  'load-path
  (expand-file-name "extensions" (file-name-directory load-file-name)))
 
-;; yasnippet
-(el-get-bundle yasnippet)
-(yas-global-mode 1)
-
 ;; diminish
 (el-get-bundle diminish)
+
+;; yasnippet
+(el-get-bundle yasnippet)
+(yas-global-mode)
+;; (diminish 'yasnippet)
 
 ;; require modules
 (require 'x-company)

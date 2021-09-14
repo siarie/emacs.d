@@ -1,18 +1,20 @@
 ;;; core-ui.el --- Core UI
-
+;;
 ;;; Commentary:
+;;
+;;; Code:
 
 (load-theme 'wombat)
 
 (set-face-attribute 'default nil
                     :height 100
-		    :weight 'normal)
+		            :weight 'normal)
 
 (set-face-attribute 'font-lock-comment-face nil
-		    :slant 'italic)
+		            :slant 'italic)
 
 (set-face-attribute 'font-lock-keyword-face nil
-		    :weight 'bold)
+		            :weight 'bold)
 
 ;; disable fancy ui
 (menu-bar-mode 0)
@@ -21,8 +23,6 @@
 
 ;; highlight current line
 (global-hl-line-mode 1)
-
-;; theme
 
 
 (provide 'core-ui)

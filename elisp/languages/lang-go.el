@@ -11,11 +11,9 @@
   ;; format before save
   (add-hook 'before-save-hook 'gofmt-before-save))
 
-
 ;; go-mode hook
 (add-hook 'go-mode-hook 'lang/go-mode--setup)
 
 (provide 'lang-go)
 
 ;;; lang-go.el ends here
-
