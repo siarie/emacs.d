@@ -2,6 +2,6 @@
 # name: function ... (...) {...}
 # key: fun
 # --
-function ${funcname} (${params}) {
+function ${funcname}(${params}) {
 	$0
 }

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: func ...() {}
+# key: func
+# --
+func ${FunctionName}(${params}) {
+     $0
+}
