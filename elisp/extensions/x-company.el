@@ -4,12 +4,20 @@
 
 (el-get-bundle company-mode)
 
-(add-hook 'after-init-hook
-          (lambda ()
-            (global-company-mode)
-            (setq company-minimum-prefix-length 2
-                  company-idle-delay 0.2)
-            (diminish 'company-mode)))
+
+(global-company-mode)
+
+(setq company-backends '((company-files          ; files & directory
+                          company-keywords       ; keywords
+                          company-capf
+                          company-yasnippet)
+                         (company-abbrev company-dabbrev)))
+
+(setq company-minimum-prefix-length 2
+      company-idle-delay 0.2)
+
+;; (add-to-list 'company-backends 'company-yasnippet)
+(diminish 'company-mode)
 
 (provide 'x-company)
 
