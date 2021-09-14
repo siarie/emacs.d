@@ -1,17 +1,18 @@
 ;;; lang-python.el --- python
 
+(el-get-bundle python-black)
+
 (defun lang/python-hook ()
-  (interactive)
   (setq python-indent-guess-indent-offset-verbose nil)
   (setq tab-width 4
-	python-indent 4
-	python-indent-offset 4
-	python-shell-interpreter "ipython"
-        python-shell-interpreter-args "-i"))
+	    python-indent 4
+	    python-indent-offset 4
+	    python-shell-interpreter "ipython"
+        python-shell-interpreter-args "-i")
+  (python-black-on-save-mode))
 
 (add-hook 'python-mode-hook 'lang/python-hook)
 
 (provide 'lang-python)
 
 ;;; lang-python.el ends here
-
