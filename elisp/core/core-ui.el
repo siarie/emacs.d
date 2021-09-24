@@ -7,6 +7,7 @@
 (load-theme 'wombat)
 
 (set-face-attribute 'default nil
+                    :family "Iosevka"
                     :height 100
 		            :weight 'normal)
 
