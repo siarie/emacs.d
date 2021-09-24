@@ -2,8 +2,8 @@
 
 ;;; code:
 
-(el-get-bundle web-mode)
-(el-get-bundle company-web)
+(straight-use-package 'web-mode)
+(straight-use-package 'company-web)
 
 
 ;; automatically activate web-mode when opening files with any

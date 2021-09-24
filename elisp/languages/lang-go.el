@@ -2,8 +2,7 @@
 
 ;;; Code:
 
-;; make sure go-mode installed
-(el-get-bundle go-mode)
+(straight-use-package 'go-mode)
 
 (defun lang/go-mode--setup ()
   "Golang mode setup."
@@ -11,7 +10,6 @@
   ;; format before save
   (add-hook 'before-save-hook 'gofmt-before-save))
 
-;; go-mode hook
 (add-hook 'go-mode-hook 'lang/go-mode--setup)
 
 (provide 'lang-go)

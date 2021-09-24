@@ -7,12 +7,11 @@
  (expand-file-name "extensions" (file-name-directory load-file-name)))
 
 ;; diminish
-(el-get-bundle diminish)
+(straight-use-package 'diminish)
 
 ;; yasnippet
-(el-get-bundle yasnippet)
+(straight-use-package 'yasnippet)
 (yas-global-mode)
-;; (diminish 'yasnippet)
 
 ;; require modules
 (require 'x-company)

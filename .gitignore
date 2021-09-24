@@ -11,8 +11,10 @@ auto-save-list
 # Undo-tree save-files
 *.~undo-tree
 
-# el-get
+# packages
 el-get
+elpa
+straight
 
 # Projectile
 projectile-bookmarks.eld

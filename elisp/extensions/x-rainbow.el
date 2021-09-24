@@ -2,13 +2,13 @@
 
 ;;; Code:
 
-(el-get-bundle rainbow-delimiters)
-
-(add-hook 'prog-mode-hook 'x/rainbow-delimiter--setup)
+(straight-use-package 'rainbow-delimiters)
 
 (defun x/rainbow-delimiter--setup ()
   (rainbow-delimiters-mode)
   (diminish 'rainbow-delimiters-mode))
+
+(add-hook 'prog-mode-hook 'x/rainbow-delimiter--setup)
 
 (provide 'x-rainbow)
 

@@ -2,7 +2,7 @@
 
 ;;; Code:
 
-(el-get-bundle magit)
+(straight-use-package 'magit)
 
 (with-eval-after-load 'magit
   (setq transient-default-level 5

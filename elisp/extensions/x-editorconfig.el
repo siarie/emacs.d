@@ -2,10 +2,9 @@
 
 ;;; Code:
 
-(el-get-bundle editorconfig)
+(straight-use-package 'editorconfig)
 
 (editorconfig-mode 1)
-
 (diminish 'editorconfig-mode)
 
 (provide 'x-editorconfig)

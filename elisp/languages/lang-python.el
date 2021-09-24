@@ -1,6 +1,6 @@
 ;;; lang-python.el --- python
 
-(el-get-bundle python-black)
+(straight-use-package 'python-black)
 
 (defun lang/python-hook ()
   (setq python-indent-guess-indent-offset-verbose nil)

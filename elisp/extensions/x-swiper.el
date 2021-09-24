@@ -2,10 +2,9 @@
 
 ;;; Code:
 
-(el-get-bundle swiper)
+(straight-use-package 'swiper)
 
 (ivy-mode 1)
-
 (global-set-key (kbd "C-x s") 'swiper)
 
 (diminish 'ivy-mode)

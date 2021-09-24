@@ -2,11 +2,9 @@
 
 ;;; Code:
 
-;; make sure projectile is instaled
-(el-get-bundle projectile)
+(straight-use-package 'projectile)
 
 (add-hook 'after-init-hook 'projectile-mode)
-
 (with-eval-after-load 'projectile
   (setq projectile-mode-line-prefix " pj" ;; short modeline
 	    projectile-completion-system 'ivy)

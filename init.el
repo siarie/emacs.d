@@ -1,5 +1,7 @@
 ;;; init.el --- emacs init
 
+;;; Code:
+
 (let ((minver "26.0"))
   (when (version< emacs-version minver)
     (error "this config requires emacs v%s or higher." minver)))
@@ -9,18 +11,20 @@
       initial-scratch-message nil)
 (add-hook 'emacs-startup-hook (lambda () (message "")))
 
-;; el-get
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+;; straight.el bootstrap
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(unless (require 'el-get nil 'noerror)
-  (with-current-buffer
-      (url-retrieve-synchronously
-       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
-    (goto-char (point-max))
-    (eval-print-last-sexp)))
-
-(add-to-list
- 'el-get-recipe-path (expand-file-name "recipes" user-emacs-directory))
 
 (add-to-list 'load-path (expand-file-name "elisp" user-emacs-directory))
 (require 'core)
@@ -32,5 +36,4 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(el-get 'sync)
 ;;; init.el ends here
