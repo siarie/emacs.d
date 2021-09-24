@@ -16,8 +16,9 @@ el-get
 elpa
 straight
 
-# Projectile
+# Projectile stuff
 projectile-bookmarks.eld
+projectile.cache
 
 # etc
 ac-comphist.dat
