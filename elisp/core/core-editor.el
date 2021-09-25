@@ -44,13 +44,6 @@
 (setq fill-column 72)
 (setq comment-auto-fill-only-comments t)
 
-;; use cua-mode; kang'ed from: https://www.emacswiki.org/emacs/CuaMode
-(cua-mode t)
-;; Don't tabify after rectangle commands
-(setq cua-auto-tabify-rectangles nil)
-(transient-mark-mode 1) ;; No region when it is not highlighted
-(setq cua-keep-region-after-copy t) ;; Standard Windows behaviour
-
 (provide 'core-editor)
 
 ;;; core-editor.el ends here
