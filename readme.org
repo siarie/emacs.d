@@ -1,6 +1,6 @@
 #+title: ~/.emacs.d
 
-My emacs configuration using el-get package manager.
+My emacs configuration using straight.el package manager.
 
 #+begin_quote
 *Note:*
@@ -17,18 +17,12 @@ This config requires emacs v26.0 or higher
 - etc.
 
 * Instalations
-** Requirement
-This config using el-get as package management.
-Which requires some packages installed on the system.
-[[https://github.com/dimitri/el-get#installation-dependencies][see el-get installation dependencies]]
-
-** Install
 
 #+begin_src sh
 $ git clone https://github.com/siarie/emacs.d.git ~/.emacs.d
 $ emacs # open emacs
 $ # wait until all package installed successfully
-$ # it may take a long time
+$ # it may take forever
 #+end_src
 
 * Licence
