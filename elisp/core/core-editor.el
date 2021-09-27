@@ -44,6 +44,9 @@
 (setq fill-column 72)
 (setq comment-auto-fill-only-comments t)
 
+;; disable ring bell
+(setq ring-bell-function 'ignore)
+
 (provide 'core-editor)
 
 ;;; core-editor.el ends here
