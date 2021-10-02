@@ -18,7 +18,7 @@
 (require 'x-editorconfig)
 (require 'x-magit)
 (require 'x-projectile)
-(require 'x-rainbow)
+;; (require 'x-rainbow)
 (require 'x-swiper)
 (require 'x-which-key)
 
