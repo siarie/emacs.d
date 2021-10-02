@@ -39,10 +39,12 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; auto fill column
-(auto-fill-mode 1)
+(setq-default auto-fill-function 'do-auto-fill)
 (global-display-fill-column-indicator-mode)
 (setq fill-column 72)
-(setq comment-auto-fill-only-comments t)
+(add-hook 'prog-mode-hook (lambda ()
+                            (setq comment-auto-fill-only-comments t)
+                            (auto-fill-mode 1)))
 
 ;; disable ring bell
 (setq ring-bell-function 'ignore)
