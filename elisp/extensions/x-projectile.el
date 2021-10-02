@@ -7,7 +7,9 @@
 (add-hook 'after-init-hook 'projectile-mode)
 (with-eval-after-load 'projectile
   (setq projectile-mode-line-prefix " pj" ;; short modeline
-	    projectile-completion-system 'ivy)
+	    projectile-completion-system 'ivy
+        projectile-enable-caching nil
+        projectile-sort-order 'default)
   (define-key projectile-mode-map (kbd "C-c p") projectile-command-map)
 
   ;; ignored these directories globally

@@ -6,10 +6,16 @@
   (when (version< emacs-version minver)
     (error "this config requires emacs v%s or higher." minver)))
 
+(add-to-list 'load-path (expand-file-name "elisp" user-emacs-directory))
+
 ;; quiet startup
 (setq inhibit-startup-message t
       initial-scratch-message nil)
 (add-hook 'emacs-startup-hook (lambda () (message "")))
+
+;; load core configuretion
+;; Note!. Don't put any straight.el stuff on the core config
+(require 'core)
 
 ;; straight.el bootstrap
 (defvar bootstrap-version)
@@ -26,9 +32,7 @@
   (load bootstrap-file nil 'nomessage))
 
 
-(add-to-list 'load-path (expand-file-name "elisp" user-emacs-directory))
-(require 'init)
-(require 'core)
+(require 'init) ;; aplications
 (require 'extensions)
 (require 'languages)
 

@@ -1,8 +1,12 @@
 ;;; lang-python.el --- python
 
 (straight-use-package 'python-black)
+(straight-use-package 'pipenv)
 
 (defun lang/python-hook ()
+  (pipenv-mode) ;; enable pipenv-mode
+  (eglot-ensure) ;; activate eglot
+  (setq python-indent-guess-indent-offset nil)
   (setq python-indent-guess-indent-offset-verbose nil)
   (setq tab-width 4
 	    python-indent 4
