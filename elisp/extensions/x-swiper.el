@@ -5,6 +5,7 @@
 (straight-use-package 'swiper)
 
 (ivy-mode 1)
+(setq ivy-use-selectable-prompt t)
 (global-set-key (kbd "C-x s") 'swiper)
 
 (diminish 'ivy-mode)
