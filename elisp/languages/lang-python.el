@@ -1,6 +1,7 @@
 ;;; lang-python.el --- python
 
-(straight-use-package 'python-black)
+;;; Code:
+
 (straight-use-package 'pipenv)
 
 (defun lang/python-hook ()
@@ -13,9 +14,9 @@
 	    python-indent-offset 4
 	    python-shell-interpreter "ipython"
         python-shell-interpreter-args "-i")
-  (python-black-on-save-mode))
+  (add-hook 'before-save-hook #'eglot-format-buffer))
 
-(add-hook 'python-mode-hook 'lang/python-hook)
+(add-hook 'python-mode-hook #'lang/python-hook)
 
 (provide 'lang-python)
 
