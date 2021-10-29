@@ -4,14 +4,18 @@
 ;;
 ;;; Code:
 
-
 ;; disable fancy ui
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 
 ;; enable theme
-(load-theme 'wombat)
+(straight-use-package 'humanoid-themes)
+(load-theme 'humanoid-dark t)
+
+;; modeline
+(straight-use-package 'simple-modeline)
+(add-hook 'after-init-hook #'simple-modeline-mode)
 
 (set-face-attribute 'default nil
                     :family "Iosevka"
@@ -25,11 +29,11 @@
 		            :weight 'bold)
 
 ;; highlight current line
-(global-hl-line-mode 1)
+;; (global-hl-line-mode 1)
 
 ;; change cursor
 (setq-default cursor-type 'bar)
-(set-cursor-color "#ffffff")
+;; (set-cursor-color 'cursor-color)
 
 (provide 'core-ui)
 

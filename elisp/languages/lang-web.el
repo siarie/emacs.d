@@ -4,8 +4,9 @@
 
 (straight-use-package 'web-mode)
 (straight-use-package 'company-web)
+(straight-use-package 'emmet-mode)
 
-
+(diminish 'emmet-mode)
 ;; automatically activate web-mode when opening files with any
 ;; extensions listed bellow
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -23,6 +24,7 @@
 
 (defun lang/web-mode--setup ()
   "Web mode config."
+  (emmet-mode)
   (setq web-mode-markup-indent-offset 2
         web-mode-css-indent-offset 2
         web-mode-code-indent-offset 2)

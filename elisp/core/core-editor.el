@@ -40,11 +40,15 @@
 
 ;; auto fill column
 (setq-default auto-fill-function 'do-auto-fill)
-(global-display-fill-column-indicator-mode)
+;; (global-display-fill-column-indicator-mode)
 (setq fill-column 72)
 (add-hook 'prog-mode-hook (lambda ()
                             (setq comment-auto-fill-only-comments t)
                             (auto-fill-mode 1)))
+
+;; disable annoying #auto-save-mode#
+(setq auto-save-default nil)
+(setq create-lockfiles nil)
 
 ;; disable ring bell
 (setq ring-bell-function 'ignore)

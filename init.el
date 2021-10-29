@@ -13,25 +13,7 @@
       initial-scratch-message nil)
 (add-hook 'emacs-startup-hook (lambda () (message "")))
 
-;; load core configuretion
-;; Note!. Don't put any straight.el stuff on the core config
 (require 'core)
-
-;; straight.el bootstrap
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-
 (require 'init) ;; aplications
 (require 'extensions)
 (require 'languages)
