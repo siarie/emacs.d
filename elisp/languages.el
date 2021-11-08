@@ -6,8 +6,11 @@
 
 (require 'lang-javascript)
 (require 'lang-go)
+(require 'lang-markdown)
+(require 'lang-org)
 (require 'lang-php)
 (require 'lang-python)
+(require 'lang-typescript)
 (require 'lang-web)
 
 (provide 'languages)

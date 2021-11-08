@@ -4,8 +4,9 @@
 
 (straight-use-package 'web-mode)
 (straight-use-package 'company-web)
+(straight-use-package 'emmet-mode)
 
-
+(diminish 'emmet-mode)
 ;; automatically activate web-mode when opening files with any
 ;; extensions listed bellow
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -17,15 +18,19 @@
 (add-to-list 'auto-mode-alist '("\\.riot\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
 
+;; jinja(2) & django
+(add-to-list 'auto-mode-alist '("\\.j2\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 
 (defun lang/web-mode--setup ()
   "Web mode config."
-  (setq web-mode-markup-offset 2)
-  (setq-local company-backends '(company-css company-files company-web-html company-yasnippet))
+  (emmet-mode)
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2)
 
   (with-eval-after-load 'web-mode
-    (setq web-mode-enable-auto-closing t
-	      web-mode-enable-auto-pairing t
+    (setq web-mode-enable-auto-pairing t
 	      web-mode-enable-css-colorization t)))
 
 (add-hook 'web-mode-hook 'lang/web-mode--setup)
