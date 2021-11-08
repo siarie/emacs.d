@@ -14,7 +14,9 @@
 (yas-global-mode)
 
 (straight-use-package 'pinentry)
-(straight-use-package 'notmuch)
+
+(unless (eq system-type 'windows-nt)
+  (straight-use-package 'notmuch))
 
 ;; diminish
 (straight-use-package 'diminish)
