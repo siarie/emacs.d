@@ -19,7 +19,10 @@ straight
 # Projectile stuff
 projectile-bookmarks.eld
 projectile.cache
+project
 
 # etc
 ac-comphist.dat
 transient
+customize.el
+.org-id-locations
