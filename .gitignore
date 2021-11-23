@@ -19,10 +19,12 @@ straight
 # Projectile stuff
 projectile-bookmarks.eld
 projectile.cache
-project
+projects
 
 # etc
 ac-comphist.dat
 transient
 customize.el
 .org-id-locations
+tramp
+eshell/
