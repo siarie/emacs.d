@@ -4,14 +4,15 @@
  'load-path
  (expand-file-name "languages" (file-name-directory load-file-name)))
 
-(require 'lang-javascript)
+(require 'lang-dart)
+(require 'lang-javascript) ;; javascript & typescript
 (require 'lang-go)
 (require 'lang-markdown)
 (require 'lang-org)
 (require 'lang-php)
 (require 'lang-python)
-(require 'lang-typescript)
 (require 'lang-web)
+(require 'lang-zig)
 
 (provide 'languages)
 
