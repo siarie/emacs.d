@@ -6,7 +6,7 @@
 
 (defun lang/go-mode--setup ()
   "Golang mode setup."
-  (eglot-ensure)
+  ;; (eglot-ensure)
   (local-set-key (kbd "C-c C-f") 'gofmt)
   ;; format before save
   (add-hook 'before-save-hook 'gofmt-before-save))
