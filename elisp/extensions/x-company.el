@@ -9,8 +9,7 @@
       company-idle-delay 0.2)
 (setq company-backends '((company-files          ; files & directory
                           company-keywords       ; keywords
-                          company-capf
-                          company-yasnippet)
+                          company-capf)
                          (company-abbrev company-dabbrev)))
 
 (diminish 'company-mode)

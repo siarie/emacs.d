@@ -9,14 +9,10 @@
 ;; eglot
 (straight-use-package 'eglot)
 
-;; yasnippet
-(straight-use-package 'yasnippet)
-(yas-global-mode)
-
 (straight-use-package 'pinentry)
 
-(unless (eq system-type 'windows-nt)
-  (straight-use-package 'notmuch))
+;;(unless (eq system-type 'windows-nt)
+;;  (straight-use-package 'notmuch))
 
 ;; diminish
 (straight-use-package 'diminish)
@@ -29,8 +25,7 @@
 (require 'x-company)
 (require 'x-editorconfig)
 (require 'x-magit)
-;; (require 'x-projectile)
-;; (require 'x-rainbow)
+(require 'x-projectile)
 (require 'x-swiper)
 (require 'x-which-key)
 
