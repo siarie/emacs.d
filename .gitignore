@@ -19,6 +19,7 @@ straight
 # Projectile stuff
 projectile-bookmarks.eld
 projectile.cache
+projectile.projects
 projects
 
 # etc
@@ -28,3 +29,4 @@ customize.el
 .org-id-locations
 tramp
 eshell/
+eln-cache/
