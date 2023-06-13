@@ -5,35 +5,25 @@
 ;;; Code:
 
 ;; disable fancy ui
-(menu-bar-mode 0)
-(tool-bar-mode 0)
-(scroll-bar-mode 0)
+(menu-bar-mode -1)
+(when (display-graphic-p)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1))
 
-;; enable theme
-(straight-use-package 'humanoid-themes)
-(load-theme 'humanoid-dark t)
-
-;; modeline
-(straight-use-package 'simple-modeline)
-(add-hook 'after-init-hook #'simple-modeline-mode)
+;; Color Theme
+(straight-use-package 'modus-themes)
+(load-theme 'modus-vivendi-deuteranopia :no-confirm)
 
 (set-face-attribute 'default nil
-                    :family "Iosevka"
-                    :height 100
-		            :weight 'normal)
-
-(set-face-attribute 'font-lock-comment-face nil
-		            :slant 'italic)
-
-(set-face-attribute 'font-lock-keyword-face nil
-		            :weight 'bold)
+                    :family "Inconsolata"
+                    :height 120
+                    :weight 'normal)
 
 ;; highlight current line
-;; (global-hl-line-mode 1)
+(global-hl-line-mode 1)
 
 ;; change cursor
 (setq-default cursor-type 'bar)
-;; (set-cursor-color 'cursor-color)
 
 (provide 'core-ui)
 
