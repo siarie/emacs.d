@@ -27,5 +27,5 @@ $ # it may take forever
 
 * Licence
 
-Released under the [[https://www.gnu.org/licenses/gpl-3.0.en.html][GPL v3]]
-unless otherwise specified by license files in subfolders.
+See [[./readme.org][LICENSE]]
+
