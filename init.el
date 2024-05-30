@@ -16,7 +16,9 @@
 (setq make-backup-files nil) ; stop creating ~ files
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq initial-scratch-message nil)
-
+(setq create-lockfiles nil)
+(setq backup-directory-alist
+      `(("." . ,(concat user-emacs-directory "backups"))))
 
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
 (set-charset-priority 'unicode)
@@ -33,6 +35,7 @@
 
 ;; built-in global mode
 (delete-selection-mode 1)
+
 ;; theme
 (load-theme 'wombat)
 
@@ -66,9 +69,15 @@
   (load bootstrap-file nil 'nomessage))
 
 
+;; magit
+(straight-use-package 'magit)
+(with-eval-after-load 'magit
+  (setq transient-default-level 5
+	    magit-completing-read-function 'ivy-completing-read))
+
 ;; company-mode
 (straight-use-package 'company)
-;; (straight-use-package 'company-quickhelp) ;; disable this cause didn't follow theme
+(straight-use-package 'company-quickhelp) ;; disable this cause didn't follow theme
 (add-hook 'after-init-hook
           (lambda ()
             (global-company-mode)))
@@ -116,6 +125,7 @@
 ;; languages
 (straight-use-package 'go-mode)
 (straight-use-package 'zig-mode)
+(straight-use-package 'php-mode)
 
 ;; auto mode list
 (add-to-list 'auto-mode-alist '("\\.zig\\'" . zig-mode))
@@ -140,6 +150,10 @@
 
 ;; (add-to-list 'load-path "/home/neo/.opam/5.1.1/share/emacs/site-lisp")
 ;; (require 'ocp-indent)
+
+
+;; Lua
+(straight-use-package 'lua-mode)
 
 ;;; init.el ends here
 
