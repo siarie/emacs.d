@@ -75,6 +75,10 @@
   (setq transient-default-level 5
 	    magit-completing-read-function 'ivy-completing-read))
 
+;; diff-hl
+(straight-use-package 'diff-hl)
+(global-diff-hl-mode)
+
 ;; company-mode
 (straight-use-package 'company)
 (straight-use-package 'company-quickhelp) ;; disable this cause didn't follow theme
@@ -119,6 +123,7 @@
 ;; (global-corfu-mode)
 
 
+
 ;; setup eglot -- LSP client
 (straight-use-package 'eglot)
 
@@ -126,6 +131,8 @@
 (straight-use-package 'go-mode)
 (straight-use-package 'zig-mode)
 (straight-use-package 'php-mode)
+(straight-use-package 'typescript-mode)
+(straight-use-package 'javascript-mode)
 
 ;; auto mode list
 (add-to-list 'auto-mode-alist '("\\.zig\\'" . zig-mode))
