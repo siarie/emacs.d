@@ -1,12 +1,14 @@
 ;;; init.el --- emacs init
+;;; Commentary:
 ;;; Code:
 
 ;; set minimum version
-(let ((minver "28.0"))
+(let ((minver "29.0"))
   (when (version< emacs-version minver)
-    (error "this config requires emacs v%s or higher." minver)))
+    (error "This config requires Emacs v%s or higher" minver)))
 
-;; (menu-bar-mode -1)
+(set-frame-font "Spleen 16x32" nil t)
+
 (setq inhibit-splash-screen t) ; Remove the "Welcome to GNU Emacs" splash screen
 (setq use-file-dialog nil)
 (when (display-graphic-p)
@@ -33,17 +35,22 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 
+;; keymap
+(global-set-key "\C-w" 'backward-kill-word) ;; TODO: kill-region if region is active
+(global-set-key "\C-d" 'backward-delete-char)
+
 ;; built-in global mode
 (delete-selection-mode 1)
 
 ;; theme
 (load-theme 'wombat)
 
-(defun display-startup-echo-area-message ()	       
+(defun display-startup-echo-area-message ()
+  "Disable startup message."
   (message ""))
 
 (defun si/enable-line-numbers ()
-  "Enable relative line numbers"
+  "Enable relative line numbers."
   (interactive)
   (display-line-numbers-mode)
   (setq display-line-numbers 'relative)
@@ -68,6 +75,10 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+
+;; editorconfig
+(straight-use-package 'editorconfig)
+(editorconfig-mode 1)
 
 ;; magit
 (straight-use-package 'magit)
@@ -127,12 +138,67 @@
 ;; setup eglot -- LSP client
 (straight-use-package 'eglot)
 
+;; treesitter
+(customize-set-variable 'treesit-font-lock-level 4)
+(setq major-mode-remap-alist
+      '((yaml-mode . yaml-ts-mode)
+        (bash-mode . bash-ts-mode)
+        (js2-mode . js-ts-mode)
+        (typescript-mode . typescript-ts-mode)
+        (json-mode . json-ts-mode)
+        (css-mode . css-ts-mode)
+        (python-mode . python-ts-mode)
+        (php-mode . php-ts-mode)))
+
+(setq treesit-language-source-alist
+      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (cmake "https://github.com/uyha/tree-sitter-cmake")
+        (css "https://github.com/tree-sitter/tree-sitter-css")
+        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+        (go "https://github.com/tree-sitter/tree-sitter-go")
+        (html "https://github.com/tree-sitter/tree-sitter-html")
+        (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+        (json "https://github.com/tree-sitter/tree-sitter-json")
+        (make "https://github.com/alemuller/tree-sitter-make")
+        (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+        (python "https://github.com/tree-sitter/tree-sitter-python")
+        (toml "https://github.com/tree-sitter/tree-sitter-toml")
+        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+        (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+        (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+        (php "https://github.com/tree-sitter/tree-sitter-php" "master" "php/src")))
+
+;; highlight
+(straight-use-package 'markdown-ts-mode)
+(straight-use-package 'markdown-mode)
+
 ;; languages
 (straight-use-package 'go-mode)
 (straight-use-package 'zig-mode)
-(straight-use-package 'php-mode)
-(straight-use-package 'typescript-mode)
-(straight-use-package 'javascript-mode)
+
+;; js/ts
+(straight-use-package 'tide)
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  ;; formats the buffer before saving
+  (add-hook 'before-save-hook 'tide-format-before-save)
+  ;; (flycheck-mode +1)
+  ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  ;; company is an optional dependency. You have to
+  ;; install it separately via package-install
+  ;; `M-x package-install [ret] company`
+  (company-mode +1))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+(add-hook 'typescript-ts-mode-hook #'setup-tide-mode)
+
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 
 ;; auto mode list
 (add-to-list 'auto-mode-alist '("\\.zig\\'" . zig-mode))
@@ -142,7 +208,6 @@
 (add-hook 'go-mode-hook
           (lambda ()
             (local-set-key (kbd "C-c C-f") 'gofmt)
-            ;; format before save
             (add-hook 'before-save-hook 'gofmt-before-save)))
 
 ;; Ocaml
@@ -150,17 +215,25 @@
 (straight-use-package 'merlin)
 (straight-use-package 'tuareg)
 (straight-use-package 'flycheck-ocaml)
-
 (flycheck-ocaml-setup)
 (add-hook 'tuareg-mode-hook #'merlin-mode)
 (add-hook 'merlin-mode-hook #'company-mode)
 
-;; (add-to-list 'load-path "/home/neo/.opam/5.1.1/share/emacs/site-lisp")
-;; (require 'ocp-indent)
-
 
 ;; Lua
 (straight-use-package 'lua-mode)
+
+
+;; php
+(straight-use-package
+ '(php-ts-mode :type git :host github :repo "emacs-php/php-ts-mode"))
+
+(add-to-list 'auto-mode-alist '("\\.php\\'" . php-ts-mode))
+(add-hook 'php-ts-mode-hook
+          (lambda ()
+			;; Use spaces for indent
+			(setq-local indent-tabs-mode nil)
+            (setq-local show-trailing-whitespace t)))
 
 ;;; init.el ends here
 
