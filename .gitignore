@@ -30,3 +30,4 @@ customize.el
 tramp
 eshell/
 eln-cache/
+tree-sitter/

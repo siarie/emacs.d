@@ -7,7 +7,7 @@
   (when (version< emacs-version minver)
     (error "This config requires Emacs v%s or higher" minver)))
 
-(set-frame-font "Spleen 16x32" nil t)
+(add-to-list 'default-frame-alist '(font . "Spleen 16x32 10"))
 
 (setq inhibit-splash-screen t) ; Remove the "Welcome to GNU Emacs" splash screen
 (setq use-file-dialog nil)
@@ -36,8 +36,19 @@
 (setq-default tab-width 4)
 
 ;; keymap
-(global-set-key "\C-w" 'backward-kill-word) ;; TODO: kill-region if region is active
+(defun si/kill-word-or-region ()
+  "Kill the region if the mark is active, otherwise kill the previous word."
+  (interactive)
+  (if mark-active
+      (kill-region (region-beginning) (region-end))
+    (backward-kill-word 1)))
+
+(global-set-key "\C-w" 'si/kill-word-or-region)
 (global-set-key "\C-d" 'backward-delete-char)
+(global-set-key (kbd "C-,") (lambda ()
+                              (interactive)
+                              (duplicate-line)
+                              (next-line)))
 
 ;; built-in global mode
 (delete-selection-mode 1)
@@ -237,3 +248,4 @@
 
 ;;; init.el ends here
 
+(put 'upcase-region 'disabled nil)
