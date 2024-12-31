@@ -31,3 +31,4 @@ tramp
 eshell/
 eln-cache/
 tree-sitter/
+.mc-lists.el

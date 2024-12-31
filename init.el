@@ -7,33 +7,31 @@
   (when (version< emacs-version minver)
     (error "This config requires Emacs v%s or higher" minver)))
 
+;;; Frame configuration
 (add-to-list 'default-frame-alist '(font . "Spleen 16x32 10"))
+(add-to-list 'default-frame-alist '(height . 42))
+(add-to-list 'default-frame-alist '(width . 130))
 
-(setq inhibit-splash-screen t) ; Remove the "Welcome to GNU Emacs" splash screen
-(setq use-file-dialog nil)
+
 (when (display-graphic-p)
   (tool-bar-mode -1)
   (scroll-bar-mode -1))
 
-(setq make-backup-files nil) ; stop creating ~ files
-(defalias 'yes-or-no-p 'y-or-n-p)
-(setq initial-scratch-message nil)
-(setq create-lockfiles nil)
-(setq backup-directory-alist
-      `(("." . ,(concat user-emacs-directory "backups"))))
-
-(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
-(set-charset-priority 'unicode)
-(setq locale-coding-system 'utf-8
-	  coding-system-for-read 'utf-8
-	  coding-system-for-write 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
+(defalias 'yes-or-no-p 'y-or-n-p)
+(setq
+ initial-scratch-message nil
+ inhibit-splash-screen t
+ use-file-dialog nil
+ create-lockfiles nil
+ make-backup-files nil
+ backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
 
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
+(setq-default
+ fill-column 80
+ indent-tabs-mode nil
+ tab-width 4
+ c-basic-offset 4)
 
 ;; keymap
 (defun si/kill-word-or-region ()
@@ -50,26 +48,45 @@
                               (duplicate-line)
                               (next-line)))
 
-;; built-in global mode
-(delete-selection-mode 1)
-
 ;; theme
 (load-theme 'wombat)
+(custom-set-faces
+ '(highlight ((t (:background "#353535" :underline nil))))
+ '(hl-line ((t (:background "#353535" :underline nil))))
+ '(vertical-border ((t (:foreground "#95e454")))))
 
-(defun display-startup-echo-area-message ()
-  "Disable startup message."
-  (message ""))
+(set-face-attribute
+ 'fill-column-indicator nil
+ :foreground "#e5786d"
+ :background 'unspecified)
 
-(defun si/enable-line-numbers ()
-  "Enable relative line numbers."
-  (interactive)
-  (display-line-numbers-mode)
-  (setq display-line-numbers 'relative)
-  )
-(add-hook 'prog-mode-hook #'si/enable-line-numbers)
-(put 'dired-find-alternate-file 'disabled nil)
+;; built-in global mode
+(global-hl-line-mode 1)
+(delete-selection-mode 1)
 
-;; bootstrap straight.el
+(setq display-line-numbers 'relative)
+(global-display-line-numbers-mode 1)
+
+(setq-default display-fill-column-indicator-character ?┃)
+(global-display-fill-column-indicator-mode 1)
+
+(column-number-mode 1)
+(fido-mode 1)
+
+;; treesitter
+(customize-set-variable 'treesit-font-lock-level 4)
+
+;; setup eglot -- LSP client
+(add-hook 'eglot-managed-mode-hook
+          (lambda ()
+            (define-key eglot-mode-map (kbd "C-c e f") 'eglot-format-buffer)
+            (define-key eglot-mode-map (kbd "C-c e r") 'eglot-rename)))
+
+(add-hook 'c-mode-hook 'eglot-ensure)
+(add-hook 'c++-mode-hook 'eglot-ensure)
+
+;; External Packages
+;;;;;;;;;;;;;;;;;;;;
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name
@@ -87,6 +104,14 @@
   (load bootstrap-file nil 'nomessage))
 
 
+(straight-use-package 'eldoc-box)
+(add-hook 'eldoc-mode-hook 'eldoc-box-hover-at-point-mode)
+;; (eldoc-box-hover-at-point-mode 1)
+
+(straight-use-package 'which-key)
+(setq which-key-idle-delay 0.5)
+(which-key-mode)
+
 ;; editorconfig
 (straight-use-package 'editorconfig)
 (editorconfig-mode 1)
@@ -94,8 +119,7 @@
 ;; magit
 (straight-use-package 'magit)
 (with-eval-after-load 'magit
-  (setq transient-default-level 5
-	    magit-completing-read-function 'ivy-completing-read))
+  (setq transient-default-level 5))
 
 ;; diff-hl
 (straight-use-package 'diff-hl)
@@ -104,116 +128,39 @@
 ;; company-mode
 (straight-use-package 'company)
 (straight-use-package 'company-quickhelp) ;; disable this cause didn't follow theme
-(add-hook 'after-init-hook
+(global-company-mode 1)
+(add-hook 'company-mode-hook
           (lambda ()
-            (global-company-mode)))
+            (company-quickhelp-mode 1)))
 
-;; projectile
-(straight-use-package 'projectile)
-;; (add-hook 'after-init-hook 'projectile-mode)
-(projectile-mode +1)
-(with-eval-after-load 'projectile
-  (setq projectile-mode-line-prefix " P" ;; short modeline
-        projectile-indexing-method 'alien
-	    ;; projectile-completion-system 'ivy
-        projectile-enable-caching nil
-        projectile-sort-order 'default)
-  (define-key projectile-mode-map (kbd "C-c p") projectile-command-map)
-  ;; register project type
-  (projectile-register-project-type 'zig '("build.zig")
-                                    :project-file "build.zig"
-				                    :compile "zig build"
-				                    :run "zig build run")
+(straight-use-package 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
-  ;; ignored these directories globally
-  (add-to-list 'projectile-globally-ignored-directories "node_modules") ; nodejs project
-  (add-to-list 'projectile-globally-ignored-directories "vendor"))
-
-;; which-key
-(straight-use-package 'which-key)
-(which-key-mode)
-(setq which-key-idle-delay 0.5)
-
-;; swipper
-(straight-use-package 'swiper)
-(ivy-mode)
-(setq ivy-use-selectable-prompt t)
-(global-set-key "\C-s" 'swiper)
-
-;; corfu -- COmpletion in Region FUnction
-;; (straight-use-package 'corfu)
-;; (global-corfu-mode)
-
-
-
-;; setup eglot -- LSP client
-(straight-use-package 'eglot)
-
-;; treesitter
-(customize-set-variable 'treesit-font-lock-level 4)
-(setq major-mode-remap-alist
-      '((yaml-mode . yaml-ts-mode)
-        (bash-mode . bash-ts-mode)
-        (js2-mode . js-ts-mode)
-        (typescript-mode . typescript-ts-mode)
-        (json-mode . json-ts-mode)
-        (css-mode . css-ts-mode)
-        (python-mode . python-ts-mode)
-        (php-mode . php-ts-mode)))
-
-(setq treesit-language-source-alist
-      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-        (cmake "https://github.com/uyha/tree-sitter-cmake")
-        (css "https://github.com/tree-sitter/tree-sitter-css")
-        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-        (go "https://github.com/tree-sitter/tree-sitter-go")
-        (html "https://github.com/tree-sitter/tree-sitter-html")
-        (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-        (json "https://github.com/tree-sitter/tree-sitter-json")
-        (make "https://github.com/alemuller/tree-sitter-make")
-        (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-        (python "https://github.com/tree-sitter/tree-sitter-python")
-        (toml "https://github.com/tree-sitter/tree-sitter-toml")
-        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-        (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-        (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-        (php "https://github.com/tree-sitter/tree-sitter-php" "master" "php/src")))
-
-;; highlight
-(straight-use-package 'markdown-ts-mode)
 (straight-use-package 'markdown-mode)
 
 ;; languages
+(straight-use-package 'web-mode)
+(setq web-mode-markup-indent-offset 2)
+(setq web-mode-css-indent-offset 2)
+
+
 (straight-use-package 'go-mode)
 (straight-use-package 'zig-mode)
-
-;; js/ts
-(straight-use-package 'tide)
-(defun setup-tide-mode ()
-  (interactive)
-  (tide-setup)
-  ;; formats the buffer before saving
-  (add-hook 'before-save-hook 'tide-format-before-save)
-  ;; (flycheck-mode +1)
-  ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (eldoc-mode +1)
-  (tide-hl-identifier-mode +1)
-  ;; company is an optional dependency. You have to
-  ;; install it separately via package-install
-  ;; `M-x package-install [ret] company`
-  (company-mode +1))
-
-;; aligns annotation to the right hand side
-(setq company-tooltip-align-annotations t)
-(add-hook 'typescript-mode-hook #'setup-tide-mode)
-(add-hook 'typescript-ts-mode-hook #'setup-tide-mode)
-
-(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 
 ;; auto mode list
 (add-to-list 'auto-mode-alist '("\\.zig\\'" . zig-mode))
 (add-to-list 'auto-mode-alist '("\\.zig.zon\\'" . zig-mode))
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+
+;; js/ts
+(add-hook 'typescript-ts-mode-hook #'eglot-ensure)
 
 ;; go specific
 (add-hook 'go-mode-hook
@@ -223,29 +170,98 @@
 
 ;; Ocaml
 (straight-use-package 'dune)
-(straight-use-package 'merlin)
 (straight-use-package 'tuareg)
-(straight-use-package 'flycheck-ocaml)
-(flycheck-ocaml-setup)
-(add-hook 'tuareg-mode-hook #'merlin-mode)
-(add-hook 'merlin-mode-hook #'company-mode)
-
+(add-hook 'tuareg-mode-hook #'eglot-ensure)
 
 ;; Lua
 (straight-use-package 'lua-mode)
 
-
 ;; php
-(straight-use-package
- '(php-ts-mode :type git :host github :repo "emacs-php/php-ts-mode"))
+(straight-use-package 'php-mode)
+;; (straight-use-package
+;;  '(php-ts-mode :type git :host github :repo "emacs-php/php-ts-mode"))
 
-(add-to-list 'auto-mode-alist '("\\.php\\'" . php-ts-mode))
-(add-hook 'php-ts-mode-hook
-          (lambda ()
-			;; Use spaces for indent
-			(setq-local indent-tabs-mode nil)
-            (setq-local show-trailing-whitespace t)))
+(defun my-php-mode-init ()
+  (subword-mode 1)
+  (setq-local show-trailing-whitespace t)
+  (setq-local ac-disable-faces '(font-lock-comment-face font-lock-string-face))
+  (add-hook 'hack-local-variables-hook 'php-ide-turn-on nil t))
+
+(with-eval-after-load 'php-mode
+  (add-hook 'php-mode-hook #'my-php-mode-init)
+  (custom-set-variables
+   '(php-mode-coding-style 'psr2)
+   '(php-mode-template-compatibility nil)
+   '(php-imenu-generic-expression 'php-imenu-generic-expression-simple)))
+
+
+;; Custom modeline
+(defun rc/modeline-buffer-name ()
+  (let ((name (buffer-name))
+        (symbol (cond (buffer-read-only (format "%s " (char-to-string #xE0A2)))
+                      ((buffer-modified-p) "◆ ")
+                      (t ""))))
+    (format "%s%s" symbol name)))
+
+(defvar-local rc/mode-line-buffer-identification
+    '(:eval
+      (propertize (rc/modeline-buffer-name))))
+
+(put 'rc/mode-line-buffer-identification 'risky-local-variable t)
+
+(defun rc/modeline-vc-mode ()
+  (let* ((file (buffer-file-name))
+         (backend (and file (vc-backend file)))
+         (rev (cond
+               ((eq backend 'Git) (vc-git--symbolic-ref file))
+               (t (vc-working-revision file backend)))))
+    (when (and backend rev)
+      (format "[%s:%s] " (symbol-name backend) rev))))
+
+(defvar-local rc/mode-line-vc-mode
+    '(:eval
+      (propertize (rc/modeline-vc-mode))))
+
+(put 'rc/mode-line-vc-mode 'risky-local-variable t)
+
+(defvar-local rc/mode-line-major-mode
+    '(:eval
+      (propertize (capitalize (string-replace "-mode" "" (symbol-name major-mode)))
+                  'face '(t :background "#b85149" :inherit bold)))
+  "Mode line construct to display the major mode.")
+
+(put 'rc/mode-line-major-mode 'risky-local-variable t)
+
+
+(defun rc/modeline-render (left right)
+  "Return a string of `window-width' length.
+Containing LEFT, and RIGHT aligned respectively."
+  (let ((available-width
+         (- (window-total-width)
+            (+ (length (format-mode-line left))
+               (length (format-mode-line right))))))
+    (append left
+            (list (format (format "%%%ds" available-width) ""))
+            right)))
+
+(setq-default mode-line-format
+              '((:eval
+                 (rc/modeline-render
+                  ;; left
+                  (quote ("%e"
+                          mode-line-front-space
+                          rc/mode-line-vc-mode
+                          rc/mode-line-buffer-identification
+                          ;; TODO: Flymake/Flycheck
+                          ))
+                  ;; Right
+                  (quote ("%e"
+                          
+                          " Ln %l, Col %c"
+                          " %p "
+                          rc/mode-line-major-mode
+                          mode-line-end-spaces
+                          ))))))
+
 
 ;;; init.el ends here
-
-(put 'upcase-region 'disabled nil)
