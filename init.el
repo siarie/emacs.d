@@ -8,7 +8,7 @@
     (error "This config requires Emacs v%s or higher" minver)))
 
 ;;; Frame configuration
-(add-to-list 'default-frame-alist '(font . "Spleen 16x32 10"))
+(add-to-list 'default-frame-alist '(font . "Spleen 16x32 11"))
 (add-to-list 'default-frame-alist '(height . 42))
 (add-to-list 'default-frame-alist '(width . 130))
 
@@ -201,11 +201,14 @@
         (symbol (cond (buffer-read-only (format "%s " (char-to-string #xE0A2)))
                       ((buffer-modified-p) "◆ ")
                       (t ""))))
-    (format "%s%s" symbol name)))
+    (if (stringp name)
+        (format "%s%s" symbol name)
+      "")))
 
 (defvar-local rc/mode-line-buffer-identification
     '(:eval
-      (propertize (rc/modeline-buffer-name))))
+      (propertize (rc/modeline-buffer-name)
+                  'face '(:inherit unspecified))))
 
 (put 'rc/mode-line-buffer-identification 'risky-local-variable t)
 
@@ -214,20 +217,22 @@
          (backend (and file (vc-backend file)))
          (rev (cond
                ((eq backend 'Git) (vc-git--symbolic-ref file))
-               (t (vc-working-revision file backend)))))
-    (when (and backend rev)
-      (format "[%s:%s] " (symbol-name backend) rev))))
+               (backend (vc-working-revision file backend)))))
+    (if (and backend rev)
+        (format "[%s:%s] " (symbol-name backend) rev)
+      "")))
 
 (defvar-local rc/mode-line-vc-mode
     '(:eval
-      (propertize (rc/modeline-vc-mode))))
+      (propertize (rc/modeline-vc-mode)
+                  'face '(:inherit bold))))
 
 (put 'rc/mode-line-vc-mode 'risky-local-variable t)
 
 (defvar-local rc/mode-line-major-mode
     '(:eval
       (propertize (capitalize (string-replace "-mode" "" (symbol-name major-mode)))
-                  'face '(t :background "#b85149" :inherit bold)))
+                  'face '(:background "#b85149" :inherit bold)))
   "Mode line construct to display the major mode.")
 
 (put 'rc/mode-line-major-mode 'risky-local-variable t)
@@ -256,7 +261,6 @@ Containing LEFT, and RIGHT aligned respectively."
                           ))
                   ;; Right
                   (quote ("%e"
-                          
                           " Ln %l, Col %c"
                           " %p "
                           rc/mode-line-major-mode
