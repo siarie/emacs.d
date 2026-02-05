@@ -7,4 +7,4 @@
 (push '(vertical-scroll-bars) default-frame-alist)
 
 ;; Disable package.el
-(setq package-enable-at-startup nil)
+;; (setq package-enable-at-startup nil)
