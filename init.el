@@ -17,10 +17,8 @@
     (package-install package))
   (require package))
 
-;; (add-to-list 'load-path (expand-file-name "elisp" user-emacs-directory))
-
 ;;; Frame configuration
-(add-to-list 'default-frame-alist '(font . "Agave 11"))
+(add-to-list 'default-frame-alist '(font . "Iosevka 11"))
 (add-to-list 'default-frame-alist '(height . 42))
 (add-to-list 'default-frame-alist '(width . 130))
 
@@ -38,11 +36,7 @@
  make-backup-files nil
  backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
 
-(setq-default
- fill-column 80
- indent-tabs-mode nil
- tab-width 4
- c-basic-offset 4)
+(setq-default fill-column 80)
 
 ;; keymap
 (defun rc/kill-word-or-region ()
@@ -108,13 +102,15 @@
 
 ;; setup eglot -- LSP client
 (import 'eglot)
-;; (add-hook 'eglot-managed-mode-hook
-;;           (lambda ()
-;;             (define-key eglot-mode-map (kbd "C-c e f") 'eglot-format-buffer)
-;;             (define-key eglot-mode-map (kbd "C-c e r") 'eglot-rename)))
-
-(add-hook 'c-mode-hook 'eglot-ensure)
-(add-hook 'c++-mode-hook 'eglot-ensure)
+(with-eval-after-load 'eglot
+  (add-hook 'before-save-hook
+            (lambda ()
+              (when (bound-and-true-p eglot--managed-mode)
+                (eglot-format-buffer))))
+  (add-to-list 'eglot-server-programs
+               '((typescript-ts-mode) . ("typescript-language-server" "--stdio"
+                                         :initializationOptions
+                                         (:typescript (:format (:indentSize 2 :tabSize 2)))))))
 
 ;; Flymake
 (setq flymake-diagnostic-format-alist
@@ -178,7 +174,6 @@
 
 ;; (add-hook 'web-mode-hook #'emmet-mode)
 
-(import 'go-mode)
 (import 'zig-mode)
 ;; (import 'zig-ts-mode)
 ;; (require 'zig-ts-mode)
@@ -193,13 +188,22 @@
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 
 ;; js/ts
-(add-hook 'typescript-ts-mode-hook #'eglot-ensure)
-
-;; go specific
-(add-hook 'go-mode-hook
+(add-hook 'typescript-ts-mode-hook
           (lambda ()
-            (local-set-key (kbd "C-c C-f") 'gofmt)
-            (add-hook 'before-save-hook 'gofmt-before-save)))
+            (setq-local typescript-ts-mode-indent-offset 2)
+            (setq-local tab-width 2)
+            (setq-local indent-tabs-mode nil)
+            (eglot-ensure)))
+
+;; go mode
+(add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+(add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
+(add-hook 'go-ts-mode-hook
+          (lambda ()
+            (setq-local tab-width 4)
+            (setq-local indent-tabs-mode t)
+            (setq-local go-ts-mode-indent-offset 4)
+            (eglot-ensure)))
 
 ;; Ocaml
 (import 'dune)
@@ -211,9 +215,6 @@
 (add-hook 'ocaml-eglot-hook #'eglot-ensure)
 (add-hook 'ocaml-eglot-hook (lambda ()
                               (add-hook 'before-save-hook #'eglot-format nil t)))
-
-;; Lua
-;; (import 'lua-mode)
 
 ;; php
 (import 'php-mode)
