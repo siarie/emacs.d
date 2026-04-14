@@ -22,9 +22,15 @@
 (add-to-list 'default-frame-alist '(height . 42))
 (add-to-list 'default-frame-alist '(width . 130))
 
-(when (display-graphic-p)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1))
+(setq-default mode-line-buffer-identification
+	      '(:eval
+		(let ((file (buffer-file-name)))
+		  (if file
+		      (let ((project (project-current)))
+			(if project
+			    (file-relative-name file (project-root project))
+			  (abbreviate-file-name file)))
+		    (buffer-name)))))
 
 (prefer-coding-system 'utf-8)
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -36,7 +42,9 @@
  make-backup-files nil
  backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
 
-(setq-default fill-column 80)
+(setq-default
+ fill-column 80
+ show-trailing-whitespace t)
 
 ;; keymap
 (defun rc/kill-word-or-region ()
@@ -54,12 +62,9 @@
                               (next-line)))
 
 ;; dired
-(defun rc/dired-init ()
-  "Dired mode init"
-  (setq dired-dwim-target t)
-  (setq dired-kill-when-opening-new-dired-buffer t))
-
-(add-hook 'dired-mode-hook 'rc/dired-init)
+(with-eval-after-load 'dired
+  (put 'dired-find-alternate-file 'disabled nil)
+  (setq dired-dwim-target t))
 
 ;; theme
 (load-theme 'wombat)
@@ -103,14 +108,15 @@
 ;; setup eglot -- LSP client
 (import 'eglot)
 (with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+	       '(zig-ts-mode . ("zls"))
+               '((typescript-ts-mode) . ("typescript-language-server" "--stdio"
+                                         :initializationOptions
+                                         (:typescript (:format (:indentSize 2 :tabSize 2))))))
   (add-hook 'before-save-hook
             (lambda ()
               (when (bound-and-true-p eglot--managed-mode)
-                (eglot-format-buffer))))
-  (add-to-list 'eglot-server-programs
-               '((typescript-ts-mode) . ("typescript-language-server" "--stdio"
-                                         :initializationOptions
-                                         (:typescript (:format (:indentSize 2 :tabSize 2)))))))
+                (eglot-format-buffer)))))
 
 ;; Flymake
 (setq flymake-diagnostic-format-alist
@@ -174,13 +180,15 @@
 
 ;; (add-hook 'web-mode-hook #'emmet-mode)
 
-(import 'zig-mode)
-;; (import 'zig-ts-mode)
+;; (import 'zig-mode)
+(import 'zig-ts-mode)
+
+;; (add-to-list 'auto-mode-alist '("\\.zig\\'" . zig-ts-mode))
+;; (add-to-list 'auto-mode-alist '("\\.zig.zon\\'" . zig-ts-mode))
 ;; (require 'zig-ts-mode)
 
 ;; auto mode list
-(add-to-list 'auto-mode-alist '("\\.zig\\'" . zig-mode))
-(add-to-list 'auto-mode-alist '("\\.zig.zon\\'" . zig-mode))
+
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -217,30 +225,13 @@
                               (add-hook 'before-save-hook #'eglot-format nil t)))
 
 ;; php
-(import 'php-mode)
-
-;; (import
-;;  '(php-ts-mode :type git :host github :repo "emacs-php/php-ts-mode"))
-;; (add-to-list 'auto-mode-alist '("\\.php\\'" . php-ts-mode))
-
 (defun my-php-mode-init ()
   (subword-mode 1)
-  (setq-local show-trailing-whitespace t)
   (setq-local ac-disable-faces '(font-lock-comment-face font-lock-string-face))
   (add-hook 'hack-local-variables-hook 'php-ide-turn-on nil t))
 
-(with-eval-after-load 'php-mode
-  (add-hook 'php-mode-hook #'my-php-mode-init)
-  (custom-set-variables
-   '(php-mode-coding-style 'psr2)
-   '(php-mode-template-compatibility nil)
-   '(php-imenu-generic-expression 'php-imenu-generic-expression-simple))
-
-  ;; If you find phpcs to be bothersome, you can disable it.
-  ;; (when (require 'flycheck nil)
-  ;;   (add-to-list 'flycheck-disabled-checkers 'php-phpmd)
-  ;;   (add-to-list 'flycheck-disabled-checkers 'php-phpcs))
-  )
+(with-eval-after-load 'php-ts-mode
+  (add-hook 'php-mode-hook #'my-php-mode-init))
 
 ;; misc - non-related to programming
 (import 'beancount)
@@ -248,4 +239,3 @@
 
 (load custom-file :no-error-if-file-is-missing)
 ;;; init.el ends here
-
