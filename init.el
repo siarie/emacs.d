@@ -1,6 +1,4 @@
-;;; init.el --- emacs init
-;;; Commentary:
-;;; Code:
+;; -*- lexical-binding: t; -*-
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
@@ -56,10 +54,11 @@
 
 (global-set-key "\C-w" 'rc/kill-word-or-region)
 (global-set-key "\C-d" 'backward-delete-char)
-(global-set-key (kbd "C-,") (lambda ()
-                              (interactive)
-                              (duplicate-line)
-                              (next-line)))
+(global-set-key (kbd "C-,")
+		(lambda ()
+                  (interactive)
+                  (duplicate-line)
+                  (next-line)))
 
 ;; dired
 (with-eval-after-load 'dired
@@ -98,15 +97,12 @@
 
 (column-number-mode 1)
 (fido-mode 1)
-
-
 (editorconfig-mode 1)
 
 ;; treesitter
 (customize-set-variable 'treesit-font-lock-level 4)
 
 ;; setup eglot -- LSP client
-(import 'eglot)
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
 	       '(zig-ts-mode . ("zls"))
@@ -121,22 +117,12 @@
 ;; Flymake
 (setq flymake-diagnostic-format-alist
       '((t . (origin code message))))
-;; (defvar my-flymake-mode-map
-;;   (let ((map (make-sparse-keymap)))
+
 (global-set-key (kbd "M-n") 'flymake-goto-next-error)
 (global-set-key (kbd "M-p") 'flymake-goto-prev-error)
 (global-set-key (kbd "C-c f d") 'flymake-show-diagnostic)
 
-
-;; tabspaces
-;; (import 'tabspaces)
-;; (tabspaces-mode 1)
-
-;; swiper
-(import 'swiper)
-(keymap-global-set "C-s" #'swiper)
-
-;; (straight-use-package 'flycheck)
+;; Eldoc
 (import 'eldoc-box)
 (add-hook 'eldoc-mode-hook 'eldoc-box-hover-at-point-mode)
 ;; (eldoc-box-hover-at-point-mode 1)
@@ -168,30 +154,22 @@
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
-;; (import 'markdown-mode)
-
 ;; languages
 (import 'web-mode)
+(import 'emmet-mode)
 (setq web-mode-markup-indent-offset 2)
 (setq web-mode-css-indent-offset 2)
 
-;; (import
-;;  '(emmet-mode :type git :host github :repo "smihica/emmet-mode"))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
-;; (add-hook 'web-mode-hook #'emmet-mode)
+(add-hook 'web-mode-hook #'emmet-mode)
 
 ;; (import 'zig-mode)
 (import 'zig-ts-mode)
 
-;; (add-to-list 'auto-mode-alist '("\\.zig\\'" . zig-ts-mode))
-;; (add-to-list 'auto-mode-alist '("\\.zig.zon\\'" . zig-ts-mode))
-;; (require 'zig-ts-mode)
-
 ;; auto mode list
-
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 
