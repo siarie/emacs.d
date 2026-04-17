@@ -161,7 +161,6 @@
 (import 'zig-ts-mode)
 
 ;; auto mode list
-(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
@@ -202,8 +201,7 @@
 
 (defun my-php-mode-init ()
   (subword-mode 1)
-  (setq-local ac-disable-faces '(font-lock-comment-face font-lock-string-face))
-  (add-hook 'hack-local-variables-hook 'php-ide-turn-on nil t))
+  (setq-local ac-disable-faces '(font-lock-comment-face font-lock-string-face)))
 
 (with-eval-after-load 'php-ts-mode
   (add-hook 'php-mode-hook #'my-php-mode-init))
