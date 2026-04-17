@@ -7,13 +7,17 @@
              '("melpa" . "https://melpa.org/packages/") t)
 
 (package-initialize)
-
 (defun import (package)
   "Ensure PACKAGE is installed and import it."
   (unless (package-installed-p package)
     (message "Installing package: %s" package)
     (package-install package))
   (require package))
+
+;; theme
+(add-to-list 'custom-theme-load-path
+	     (expand-file-name "themes/" user-emacs-directory))
+(load-theme 'kombat t)
 
 ;;; Frame configuration
 (add-to-list 'default-frame-alist '(font . "Iosevka 11"))
@@ -65,17 +69,6 @@
   (put 'dired-find-alternate-file 'disabled nil)
   (setq dired-dwim-target t))
 
-;; theme
-(load-theme 'wombat)
-(custom-set-faces
- '(tab-line ((t (:inherit mode-line))))
- '(tab-line-tab ((t (:inherit default))))
- '(tab-bar ((t (:inherit mode-line))))
- '(tab-bar-tab ((t (:inherit default))))
- '(font-lock-keyword-face ((t (:foreground "#f6f3e8" :bold t))))
- '(highlight ((t (:background "#353535" :underline nil))))
- '(hl-line ((t (:background "#353535" :underline nil))))
- '(vertical-border ((t (:inherit highlight)))))
 
 ;; built-in global mode
 (tab-bar-mode 1)
@@ -193,16 +186,20 @@
 
 ;; Ocaml
 (import 'dune)
-(import 'reason-mode)
-(import 'tuareg)
-(import 'ocaml-eglot)
+(import 'neocaml)
+;; (import 'reason-mode)
+;; (import 'ocaml-eglot)
 
-(add-hook 'tuareg-mode-hook #'ocaml-eglot)
-(add-hook 'ocaml-eglot-hook #'eglot-ensure)
-(add-hook 'ocaml-eglot-hook (lambda ()
-                              (add-hook 'before-save-hook #'eglot-format nil t)))
+(defun rc/ocaml-mode-init ()
+  (eglot-ensure))
+
+(with-eval-after-load 'neocaml
+  (add-hook 'neocaml-mode-hook #'rc/ocaml-mode-init)
+  (add-hook 'neocaml-mode-hook #'eglot-format-buffer nil t))
 
 ;; php
+(add-to-list 'auto-mode-alist '("\\.php\\'" . php-ts-mode))
+
 (defun my-php-mode-init ()
   (subword-mode 1)
   (setq-local ac-disable-faces '(font-lock-comment-face font-lock-string-face))
