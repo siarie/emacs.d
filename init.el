@@ -44,9 +44,7 @@
  make-backup-files nil
  backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
 
-(setq-default
- fill-column 80
- show-trailing-whitespace t)
+(setq-default show-trailing-whitespace t)
 
 ;; keymap
 (defun rc/kill-word-or-region ()
@@ -69,6 +67,10 @@
   (put 'dired-find-alternate-file 'disabled nil)
   (setq dired-dwim-target t))
 
+(setq org-capture-templates
+      '(("j" "Journal" entry (file+datetree "~/org/journal.org")
+         "* %?\nEntered on %U\n  %i\n  %a")))
+
 
 ;; built-in global mode
 (tab-bar-mode 1)
@@ -85,8 +87,13 @@
 (setq display-line-numbers 'relative)
 (global-display-line-numbers-mode 1)
 
-;; (setq-default display-fill-column-indicator-character ?┃)
+(setq-default fill-column 80)
 (global-display-fill-column-indicator-mode 1)
+(add-hook 'org-mode-hook #'turn-on-auto-fill)
+(add-hook 'git-commit-mode-hook
+	  (lambda ()
+	    (setq-local fill-column 72)
+	    (turn-on-auto-fill)))
 
 (column-number-mode 1)
 (fido-mode 1)
@@ -98,10 +105,9 @@
 ;; setup eglot -- LSP client
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
-	       '(zig-ts-mode . ("zls"))
-               '((typescript-ts-mode) . ("typescript-language-server" "--stdio"
-                                         :initializationOptions
-                                         (:typescript (:format (:indentSize 2 :tabSize 2))))))
+	       '(neocaml-base-mode . ("ocamllsp" "--fallback-read-dot-merlin")))
+  (add-to-list 'eglot-server-programs
+	       '(zig-ts-mode . ("zls")))
   (add-hook 'before-save-hook
             (lambda ()
               (when (bound-and-true-p eglot--managed-mode)
@@ -114,11 +120,6 @@
 (global-set-key (kbd "M-n") 'flymake-goto-next-error)
 (global-set-key (kbd "M-p") 'flymake-goto-prev-error)
 (global-set-key (kbd "C-c f d") 'flymake-show-diagnostic)
-
-;; Eldoc
-(import 'eldoc-box)
-(add-hook 'eldoc-mode-hook 'eldoc-box-hover-at-point-mode)
-;; (eldoc-box-hover-at-point-mode 1)
 
 (import 'which-key)
 (setq which-key-idle-delay 0.5)

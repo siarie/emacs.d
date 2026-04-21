@@ -34,7 +34,7 @@ are included."
   (custom-theme-set-faces
    'kombat
    `(default ((,class (:background "#242424" :foreground "#f6f3e8"))))
-   `(cursor ((,class (:background "#656565"))))
+   `(cursor ((,class (:background "#8ac6f2"))))
    ;; Highlighting faces
    `(fringe ((,class (:background "#303030"))))
    `(highlight ((,class (:background "#353535" :underline nil))))
@@ -48,13 +48,14 @@ are included."
    ;; Tab Bar
    `(tab-bar ((,class (:inherit mode-line))))
    `(tab-bar-tab ((,class (:inherit default))))
+   `(tab-bar-tab-inactive ((,class (:inherit mode-line))))
    ;; Escape and prompt faces
    `(minibuffer-prompt ((,class (:foreground "#e5786d"))))
    `(escape-glyph ((,class (:foreground "#ddaa6f" :weight bold))))
    `(homoglyph ((,class (:foreground "#ddaa6f" :weight bold))))
    ;; Font lock faces
    `(font-lock-builtin-face ((,class (:foreground "#e5786d"))))
-   `(font-lock-comment-face ((,class (:foreground "#99968b"))))
+   `(font-lock-comment-face ((,class (:foreground "#ddaa6f"))))
    `(font-lock-constant-face ((,class (:inherit default))))
    `(font-lock-function-name-face ((,class (:inherit default))))
    `(font-lock-keyword-face ((,class (:foreground "#8ac6f2" :weight bold))))
