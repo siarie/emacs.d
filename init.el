@@ -45,8 +45,11 @@
  backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
 
 (setq-default show-trailing-whitespace t)
+(setq delete-trailing-lines nil)
+(setq require-final-newline t)
 
-;; keymap
+(add-to-list 'write-file-functions 'delete-trailing-whitespace)
+
 (defun rc/kill-word-or-region ()
   "Kill the region if the mark is active, otherwise kill the previous word."
   (interactive)
@@ -54,13 +57,14 @@
       (kill-region (region-beginning) (region-end))
     (backward-kill-word 1)))
 
-(global-set-key "\C-w" 'rc/kill-word-or-region)
-(global-set-key "\C-d" 'backward-delete-char)
-(global-set-key (kbd "C-,")
-		(lambda ()
-                  (interactive)
-                  (duplicate-line)
-                  (next-line)))
+(defun rc/duplicate-line ()
+  (interactive)
+  (duplicate-line)
+  (next-line))
+
+(keymap-global-set "C-d" #'delete-backward-char)
+(keymap-global-set "C-w" #'rc/kill-word-or-region)
+(keymap-global-set "C-," #'rc/duplicate-line)
 
 ;; dired
 (with-eval-after-load 'dired
@@ -71,15 +75,12 @@
       '(("j" "Journal" entry (file+datetree "~/org/journal.org")
          "* %?\nEntered on %U\n  %i\n  %a")))
 
-
 ;; built-in global mode
 (tab-bar-mode 1)
 (setq tab-bar-auto-width nil
       tab-bar-close-button-show nil
       tab-bar-new-button-show nil
       tab-bar-new-tab-choice "*scratch*")
-
-
 
 (global-hl-line-mode 1)
 (delete-selection-mode 1)
@@ -96,30 +97,34 @@
 	    (turn-on-auto-fill)))
 
 (column-number-mode 1)
-(fido-mode 1)
+;; (fido-mode 1)
 (editorconfig-mode 1)
 
 ;; treesitter
 (customize-set-variable 'treesit-font-lock-level 4)
 
 ;; setup eglot -- LSP client
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-	       '(neocaml-base-mode . ("ocamllsp" "--fallback-read-dot-merlin")))
-  (add-to-list 'eglot-server-programs
-	       '(zig-ts-mode . ("zls")))
+(defun rc/eglot-setup ()
+  (keymap-local-set "C-h ." 'eldoc-box-help-at-point)
   (add-hook 'before-save-hook
             (lambda ()
               (when (bound-and-true-p eglot--managed-mode)
                 (eglot-format-buffer)))))
 
-;; Flymake
-(setq flymake-diagnostic-format-alist
-      '((t . (origin code message))))
+(with-eval-after-load 'eglot
+  (dolist (item '((neocaml-base-mode . ("ocamllsp" "--fallback-read-dot-merlin"))
+                  (zig-ts-mode . ("zls"))))
+    (add-to-list 'eglot-server-programs item))
+  (add-hook 'eglot-managed-mode-hook #'rc/eglot-setup))
 
-(global-set-key (kbd "M-n") 'flymake-goto-next-error)
-(global-set-key (kbd "M-p") 'flymake-goto-prev-error)
-(global-set-key (kbd "C-c f d") 'flymake-show-diagnostic)
+;; Flymake
+(defun rc/flymake-setup ()
+  (keymap-local-set (kbd "M-n") 'flymake-goto-next-error)
+  (keymap-local-set (kbd "M-p") 'flymake-goto-prev-error)
+  (keymap-local-set (kbd "C-c f d") 'flymake-show-diagnostic))
+
+(with-eval-after-load 'flymake-mode
+  (add-hook 'flymake-mode-hook #'rc/flymake-setup))
 
 (import 'which-key)
 (setq which-key-idle-delay 0.5)
@@ -128,25 +133,43 @@
 ;; magit
 (import 'magit)
 (with-eval-after-load 'magit
+  (setq magit-diff-refine-hunk t)
   (setq transient-default-level 5))
 
 ;; diff-hl
 (import 'diff-hl)
 (global-diff-hl-mode)
 
-;; company-mode
-(import 'company)
-(import 'company-quickhelp) ;; disable this cause didn't follow theme
-(global-company-mode 1)
-(add-hook 'company-mode-hook
-          (lambda ()
-            (company-quickhelp-mode 1)))
+;; corfu
+(import 'corfu)
+
+(defun corfu-enable-always-in-minibuffer ()
+  "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+  (unless (or (bound-and-true-p mct--active) ; Useful if I ever use MCT
+              (bound-and-true-p vertico--input))
+    (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
+    (corfu-mode 1)))
+
+(with-eval-after-load 'corfu
+  (setq tab-always-indent 'complete)
+  (setq completion-cycle-threshold nil)
+  (setq global-corfu-minibuffer t)
+  (setq corfu-auto nil
+	corfu-auto-delay 0.25
+	corfu-auto-trigger "." ;; Custom trigger characters
+	corfu-min-width 72
+	corfu-max-width 72
+	corfu-count 14
+	corfu-quit-no-match 'separator) ;; or t
+  (global-corfu-mode 1)
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1))
+
 
 (import 'multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+(keymap-global-set "C-S-c C-S-c" 'mc/edit-lines)
+(keymap-global-set "C->" 'mc/mark-next-like-this)
+(keymap-global-set "C-<" 'mc/mark-previous-like-this)
+(keymap-global-set "C-c C-<" 'mc/mark-all-like-this)
 
 ;; languages
 (import 'web-mode)
@@ -210,6 +233,9 @@
 ;; misc - non-related to programming
 (import 'beancount)
 (add-to-list 'auto-mode-alist '("\\.beancount\\'" . beancount-mode))
+
+(import 'minions)
+(minions-mode 1)
 
 (load custom-file :no-error-if-file-is-missing)
 ;;; init.el ends here
