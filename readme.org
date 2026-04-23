@@ -1,20 +1,13 @@
 #+title: ~/.emacs.d
 
-My emacs configuration using straight.el package manager.
-
 #+begin_quote
 *Note:*
 
-This config requires emacs v26.0 or higher
+This config requires emacs v30.0 or higher
 #+end_quote
 
-* Supported language
-
-- PHP (php-mode)
-- Python (default, with some improvement)
-- HTML / CSS / SCSS / Javascript (with web-mode)
-- Go
-- etc.
+#+CAPTION: Overview of my emacs
+[[./assets/screenshot.jpg]]
 
 * Instalations
 
