@@ -140,6 +140,13 @@
 (import 'diff-hl)
 (global-diff-hl-mode)
 
+;; auto-detect indentation
+(import 'dtrt-indent)
+(with-eval-after-load 'dtrt-indent
+  (add-hook 'prog-mode-hook
+	    (lambda ()
+	      (dtrt-indent-mode 1))))
+
 ;; corfu
 (import 'corfu)
 
