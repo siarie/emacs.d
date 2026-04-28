@@ -73,7 +73,9 @@
 
 (setq org-capture-templates
       '(("j" "Journal" entry (file+datetree "~/org/journal.org")
-         "* %?\nEntered on %U\n  %i\n  %a")))
+         "* %?\nEntered on %U\n  %i\n  %a")
+	("t" "Todo" entry (file+headline "~/org/todos.org" "Tasks")
+	 "* TODO %?\n %i\n %a")))
 
 ;; built-in global mode
 (tab-bar-mode 1)
