@@ -37,6 +37,7 @@
 (prefer-coding-system 'utf-8)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq
+ ring-bell-function 'ignore
  initial-scratch-message nil
  inhibit-splash-screen t
  use-file-dialog nil
