@@ -1,4 +1,4 @@
-;;; early-init.el
+;;; early-init.el  -*- lexical-binding: t; -*-
 
 (setq gc-cons-threshold 10000000)
 (setq byte-compile-warnings '(not obsolete))
@@ -8,6 +8,8 @@
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+
+(setq-default frame-title-format '("emacs@" system-name))
 
 (setq default-frame-alist '((fullscreen . maximized)
 			    (vertical-scroll-bars . nil)

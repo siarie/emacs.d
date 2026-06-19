@@ -1,5 +1,8 @@
 ;; -*- lexical-binding: t; -*-
 
+(when (< emacs-major-version 32)
+  (error "Error: Emacs version 31 or higher is required"))
+
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
 (require 'package)
@@ -100,11 +103,12 @@
 	    (turn-on-auto-fill)))
 
 (column-number-mode 1)
-;; (fido-mode 1)
 (editorconfig-mode 1)
 
 ;; treesitter
-(customize-set-variable 'treesit-font-lock-level 4)
+(setq treesit-auto-install-grammar t
+      treesit-enabled-modes t)
+(customize-set-variable 'treesit-font-lock-level 2)
 
 ;; setup eglot -- LSP client
 (defun rc/eglot-setup ()
