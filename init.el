@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-(when (< emacs-major-version 32)
+(when (< emacs-major-version 31)
   (error "Error: Emacs version 31 or higher is required"))
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
