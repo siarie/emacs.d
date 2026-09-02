@@ -45,6 +45,10 @@ are included."
    ;; Mode line faces
    `(mode-line ((,class (:background "#444444" :foreground "#f6f3e8"))))
    `(mode-line-inactive ((,class (:background "#444444" :foreground "#857b6f"))))
+   ;; Whitespace
+   `(whitespace-space ((,class (:foreground "#ddaa6f"))))
+   `(whitespace-tab ((,class (:foreground "#ddaa6f"))))
+   `(whitespace-trailing ((,class (:background "#e5786d"))))
    ;; Tab Bar
    `(tab-bar ((,class (:inherit mode-line))))
    `(tab-bar-tab ((,class (:inherit default))))

@@ -1,4 +1,4 @@
-;;; early-init.el  -*- lexical-binding: t; -*-
+;;; early-init.el -*- lexical-binding: t; -*-
 
 (setq gc-cons-threshold 10000000)
 (setq byte-compile-warnings '(not obsolete))
@@ -13,15 +13,11 @@
 
 (setq default-frame-alist '((fullscreen . maximized)
 			    (vertical-scroll-bars . nil)
-                            (horizontal-scroll-bars . nil)
+			    (horizontal-scroll-bars . nil)
 			    (background-color . "#000000")
-                            (foreground-color . "#ffffff")
-                            (ns-appearance . dark)
-                            (ns-transparent-titlebar . t)))
-
-;; (push '(menu-bar-lines . 0) default-frame-alist)
-;; (push '(tool-bar-lines . 0) default-frame-alist)
-;; (push '(vertical-scroll-bars) default-frame-alist)
+			    (foreground-color . "#ffffff")
+			    (ns-appearance . dark)
+			    (ns-transparent-titlebar . t)))
 
 ;; Disable package.el
 ;; (setq package-enable-at-startup nil)

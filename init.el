@@ -7,7 +7,7 @@
 
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+	     '("melpa" . "https://melpa.org/packages/") t)
 
 (package-initialize)
 (defun import (package)
@@ -23,7 +23,7 @@
 (load-theme 'kombat t)
 
 ;;; Frame configuration
-(add-to-list 'default-frame-alist '(font . "Iosevka 11"))
+(add-to-list 'default-frame-alist         '(font . "Iosevka 11"))
 (add-to-list 'default-frame-alist '(height . 42))
 (add-to-list 'default-frame-alist '(width . 130))
 
@@ -37,11 +37,19 @@
 			  (abbreviate-file-name file)))
 		    (buffer-name)))))
 
+(setq custom-scratch-message ";;
+;; Quick cheatseat
+;; Key                         Binding
+;;
+;; C-c c                       org-capture
+;; C-c a                       org-agenda-list
+")
+
 (prefer-coding-system 'utf-8)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq
  ring-bell-function 'ignore
- initial-scratch-message nil
+ initial-scratch-message (concat initial-scratch-message custom-scratch-message)
  inhibit-splash-screen t
  use-file-dialog nil
  create-lockfiles nil
@@ -49,10 +57,6 @@
  backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
 
 (setq-default show-trailing-whitespace t)
-(setq delete-trailing-lines nil)
-(setq require-final-newline t)
-
-(add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
 (defun rc/kill-word-or-region ()
   "Kill the region if the mark is active, otherwise kill the previous word."
@@ -75,11 +79,18 @@
   (put 'dired-find-alternate-file 'disabled nil)
   (setq dired-dwim-target t))
 
+;; org
+(setq org-agenda-files '("~/docs/org/"))
 (setq org-capture-templates
-      '(("j" "Journal" entry (file+datetree "~/org/journal.org")
-         "* %?\nEntered on %U\n  %i\n  %a")
-	("t" "Todo" entry (file+headline "~/org/todos.org" "Tasks")
-	 "* TODO %?\n %i\n %a")))
+      '(("j" "Journal" entry (file+datetree "~/docs/org/journal.org")
+	 "* %?\nEntered on %U\n  %i\n  %a")
+	("t" "Todo" entry (file+headline "~/docs/org/todos.org" "Tasks")
+	 "* TODO %?\n %i\n %a")
+	("b" "Bookmark" entry (file+headline "~/docs/org/bookmarks.org" "Bookmarks")
+	 "* %?\n%^L\n%i\n%a")))
+
+(keymap-global-set "C-c c" 'org-capture)
+(keymap-global-set "C-c a" 'org-agenda-list)
 
 ;; built-in global mode
 (tab-bar-mode 1)
@@ -114,13 +125,13 @@
 (defun rc/eglot-setup ()
   (keymap-local-set "C-h ." 'eldoc-box-help-at-point)
   (add-hook 'before-save-hook
-            (lambda ()
-              (when (bound-and-true-p eglot--managed-mode)
-                (eglot-format-buffer)))))
+	    (lambda ()
+	      (when (bound-and-true-p eglot--managed-mode)
+		(eglot-format-buffer)))))
 
 (with-eval-after-load 'eglot
   (dolist (item '((neocaml-base-mode . ("ocamllsp" "--fallback-read-dot-merlin"))
-                  (zig-ts-mode . ("zls"))))
+		  (zig-ts-mode . ("zls"))))
     (add-to-list 'eglot-server-programs item))
   (add-hook 'eglot-managed-mode-hook #'rc/eglot-setup))
 
@@ -147,6 +158,9 @@
 (import 'diff-hl)
 (global-diff-hl-mode)
 
+;; rainbow-mode
+(import 'rainbow-mode)
+
 ;; auto-detect indentation
 (import 'dtrt-indent)
 (with-eval-after-load 'dtrt-indent
@@ -160,7 +174,7 @@
 (defun corfu-enable-always-in-minibuffer ()
   "Enable Corfu in the minibuffer if Vertico/Mct are not active."
   (unless (or (bound-and-true-p mct--active) ; Useful if I ever use MCT
-              (bound-and-true-p vertico--input))
+	      (bound-and-true-p vertico--input))
     (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
     (corfu-mode 1)))
 
@@ -205,21 +219,21 @@
 
 ;; js/ts
 (add-hook 'typescript-ts-mode-hook
-          (lambda ()
-            (setq-local typescript-ts-mode-indent-offset 2)
-            (setq-local tab-width 2)
-            (setq-local indent-tabs-mode nil)
-            (eglot-ensure)))
+	  (lambda ()
+	    (setq-local typescript-ts-mode-indent-offset 2)
+	    (setq-local tab-width 2)
+	    (setq-local indent-tabs-mode nil)
+	    (eglot-ensure)))
 
 ;; go mode
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
 (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
 (add-hook 'go-ts-mode-hook
-          (lambda ()
-            (setq-local tab-width 4)
-            (setq-local indent-tabs-mode t)
-            (setq-local go-ts-mode-indent-offset 4)
-            (eglot-ensure)))
+	  (lambda ()
+	    (setq-local tab-width 4)
+	    (setq-local indent-tabs-mode t)
+	    (setq-local go-ts-mode-indent-offset 4)
+	    (eglot-ensure)))
 
 ;; Ocaml
 (import 'dune)
@@ -243,6 +257,9 @@
 
 (with-eval-after-load 'php-ts-mode
   (add-hook 'php-mode-hook #'my-php-mode-init))
+
+;; elixir
+(import 'elixir-mode)
 
 ;; misc - non-related to programming
 (import 'beancount)
