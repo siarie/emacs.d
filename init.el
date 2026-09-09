@@ -22,10 +22,14 @@
 	     (expand-file-name "themes/" user-emacs-directory))
 (load-theme 'kombat t)
 
+;; host spesific configuration
+(defconst host (system-name))
+(load
+ (file-name-concat user-emacs-directory "hosts" host)
+ 'noerror 'nomessage)
+
 ;;; Frame configuration
 (add-to-list 'default-frame-alist         '(font . "Iosevka 11"))
-(add-to-list 'default-frame-alist '(height . 42))
-(add-to-list 'default-frame-alist '(width . 130))
 
 (setq-default mode-line-buffer-identification
 	      '(:eval
@@ -80,13 +84,17 @@
   (setq dired-dwim-target t))
 
 ;; org
-(setq org-agenda-files '("~/docs/org/"))
+(setq org-agenda-files `(,org-root-directory))
 (setq org-capture-templates
-      '(("j" "Journal" entry (file+datetree "~/docs/org/journal.org")
+      `(("j" "Journal" entry
+	 (file+datetree ,(file-name-concat org-root-directory "inbox.org"))
 	 "* %?\nEntered on %U\n  %i\n  %a")
-	("t" "Todo" entry (file+headline "~/docs/org/todos.org" "Tasks")
+	("t" "Todo" entry
+	 (file+headline ,(file-name-concat org-root-directory "inbox.org") "Tasks")
 	 "* TODO %?\n %i\n %a")
-	("b" "Bookmark" entry (file+headline "~/docs/org/bookmarks.org" "Bookmarks")
+	("b" "Bookmark" entry
+	 (file+headline
+	  ,(file-name-concat org-root-directory "inbox.org") "Bookmarks")
 	 "* %?\n%^L\n%i\n%a")))
 
 (keymap-global-set "C-c c" 'org-capture)
