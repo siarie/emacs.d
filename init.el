@@ -62,21 +62,37 @@
 
 (setq-default show-trailing-whitespace t)
 
-(defun rc/kill-word-or-region ()
+;; custom function
+;; ---------------
+(defun my/kill-word-or-region ()
   "Kill the region if the mark is active, otherwise kill the previous word."
   (interactive)
   (if mark-active
       (kill-region (region-beginning) (region-end))
     (backward-kill-word 1)))
 
-(defun rc/duplicate-line ()
+(defun my/duplicate-line ()
   (interactive)
   (duplicate-line)
   (next-line))
 
+(defun my/dashboard ()
+  (interactive)
+  (tab-rename "*Dashboard*")
+  (delete-other-windows)
+  (find-file org-default-notes-file)
+  (split-window-right)
+  (other-window 1)
+  (split-window-below)
+  (org-todo-list)
+  (other-window 1)
+  (org-agenda-list))
+
 (keymap-global-set "C-d" #'delete-backward-char)
-(keymap-global-set "C-w" #'rc/kill-word-or-region)
-(keymap-global-set "C-," #'rc/duplicate-line)
+(keymap-global-set "C-w" #'my/kill-word-or-region)
+(keymap-global-set "C-," #'my/duplicate-line)
+
+(add-hook 'emacs-startup-hook #'my/dashboard)
 
 ;; dired
 (with-eval-after-load 'dired
@@ -84,21 +100,31 @@
   (setq dired-dwim-target t))
 
 ;; org
-(setq org-agenda-files `(,org-root-directory))
+(setq org-default-notes-file (file-name-concat org-root-directory "inbox.org"))
+
+;; agenda
+(setq org-agenda-window-setup 'current-window
+      org-agenda-sticky t
+      org-agenda-files `(,org-root-directory))
+
+;; todo
+(setq org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAITING(w)" "|"
+				    "DONE(d)" "CANCELLED(c)"))
+      org-todo-keyword-faces '(("IN-PROGRESS" . (:foreground "orange" :weight bold))
+			       ("WAITING"     . (:foreground "yellow" :weight bold))
+			       ("CANCELLED"   . (:foreground "gray" :weight bold))))
+
 (setq org-capture-templates
-      `(("j" "Journal" entry
-	 (file+datetree ,(file-name-concat org-root-directory "inbox.org"))
-	 "* %?\nEntered on %U\n  %i\n  %a")
-	("t" "Todo" entry
-	 (file+headline ,(file-name-concat org-root-directory "inbox.org") "Tasks")
+      `(("t" "Todo" entry
+	 (file+headline ,(file-name-concat org-root-directory "inbox.org") "")
 	 "* TODO %?\n %i\n %a")
-	("b" "Bookmark" entry
+	("a" "Agenda" entry
 	 (file+headline
-	  ,(file-name-concat org-root-directory "inbox.org") "Bookmarks")
-	 "* %?\n%^L\n%i\n%a")))
+	  ,(file-name-concat org-root-directory "agenda.org") "Agenda")
+	 "* %?\n  SCHEDULED: %^t")))
 
 (keymap-global-set "C-c c" 'org-capture)
-(keymap-global-set "C-c a" 'org-agenda-list)
+(keymap-global-set "C-c a" 'org-agenda)
 
 ;; built-in global mode
 (tab-bar-mode 1)
@@ -275,6 +301,24 @@
 
 (import 'minions)
 (minions-mode 1)
+
+(import 'tabspaces)
+(with-eval-after-load 'tabspaces
+  (setq tabspaces-default-tab "*Dashboard*"
+	tabspaces-use-filtered-buffers-as-default t
+	tabspaces-include-buffers '("*scratch*")
+	tabspaces-session t
+	tabspaces-exclude-buffers '("*Messages*" "*Compile-Log*")
+	tab-bar-new-tab-choice "*scratch*")
+  (setq tabspaces-keymap-prefix "C-c p"
+	tabspaces-project-tab-map)
+  ;; bind
+  ;; (keymap-global-set "C-c p" tabspaces-command-map)
+  ;; (keymap-global-set "C-x p p" #'tabspaces-open-or-switch-project)
+  ;; (keymap-global-set "C-x p b" #'tabspaces-switch-to-buffer)
+  ;; (keymap-global-set "C-x p k" #'tabspaces-close-workspace)
+
+  (tabspaces-mode 1))
 
 (load custom-file :no-error-if-file-is-missing)
 ;;; init.el ends here
