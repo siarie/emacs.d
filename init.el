@@ -308,8 +308,7 @@
 	tabspaces-use-filtered-buffers-as-default t
 	tabspaces-include-buffers '("*scratch*")
 	;; additional options
-	tabspaces-exclude-buffers '("*Messages*" "*Compile-Log*")
-	tab-bar-new-tab-choice "*scratch*")
+	tabspaces-exclude-buffers '("*Messages*" "*Compile-Log*"))
   (setq tabspaces-keymap-prefix "C-c p")
 
   ;; bind
