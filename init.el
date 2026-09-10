@@ -307,16 +307,13 @@
   (setq tabspaces-default-tab "*Dashboard*"
 	tabspaces-use-filtered-buffers-as-default t
 	tabspaces-include-buffers '("*scratch*")
-	tabspaces-session t
+	;; additional options
 	tabspaces-exclude-buffers '("*Messages*" "*Compile-Log*")
 	tab-bar-new-tab-choice "*scratch*")
-  (setq tabspaces-keymap-prefix "C-c p"
-	tabspaces-project-tab-map)
+  (setq tabspaces-keymap-prefix "C-c p")
+
   ;; bind
   ;; (keymap-global-set "C-c p" tabspaces-command-map)
-  ;; (keymap-global-set "C-x p p" #'tabspaces-open-or-switch-project)
-  ;; (keymap-global-set "C-x p b" #'tabspaces-switch-to-buffer)
-  ;; (keymap-global-set "C-x p k" #'tabspaces-close-workspace)
 
   (tabspaces-mode 1))
 
