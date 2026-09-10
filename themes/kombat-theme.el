@@ -43,16 +43,16 @@ are included."
    `(isearch ((,class (:background "#343434" :foreground "#857b6f"))))
    `(lazy-highlight ((,class (:background "#384048" :foreground "#a0a8b0"))))
    ;; Mode line faces
-   `(mode-line ((,class (:background "#444444" :foreground "#f6f3e8"))))
+   `(mode-line ((,class (:background "#444444" :foreground "#f6f3e8" :box "#f6f3e8"))))
    `(mode-line-inactive ((,class (:background "#444444" :foreground "#857b6f"))))
    ;; Whitespace
    `(whitespace-space ((,class (:foreground "#ddaa6f"))))
    `(whitespace-tab ((,class (:foreground "#ddaa6f"))))
    `(whitespace-trailing ((,class (:background "#e5786d"))))
    ;; Tab Bar
-   `(tab-bar ((,class (:inherit mode-line))))
-   `(tab-bar-tab ((,class (:inherit default))))
-   `(tab-bar-tab-inactive ((,class (:inherit mode-line))))
+   `(tab-bar ((,class (:inherit mode-line :box nil))))
+   `(tab-bar-tab ((,class (:inherit default :box "#f6f3e8"))))
+   `(tab-bar-tab-inactive ((,class (:inherit tab-bar))))
    ;; Escape and prompt faces
    `(minibuffer-prompt ((,class (:foreground "#e5786d"))))
    `(escape-glyph ((,class (:foreground "#ddaa6f" :weight bold))))
