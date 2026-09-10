@@ -193,7 +193,7 @@
 (global-diff-hl-mode)
 
 ;; rainbow-mode
-(import 'rainbow-mode)
+(import 'colorful-mode)
 
 ;; auto-detect indentation
 (import 'dtrt-indent)
