@@ -92,8 +92,6 @@
 (keymap-global-set "C-w" #'my/kill-word-or-region)
 (keymap-global-set "C-," #'my/duplicate-line)
 
-(add-hook 'emacs-startup-hook #'my/dashboard)
-
 ;; dired
 (with-eval-after-load 'dired
   (put 'dired-find-alternate-file 'disabled nil)
